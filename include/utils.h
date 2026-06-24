@@ -1,5 +1,5 @@
 
-typedef enum { EnvAdd, EnvRemove, EnvUpdate } EnvAction;
+typedef enum { EnvList, EnvAdd, EnvRemove, EnvUpdate } EnvAction;
 
 // Args struct
 typedef struct {
