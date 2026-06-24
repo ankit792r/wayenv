@@ -1,0 +1,62 @@
+# ==========================================
+# Compiled Binaries & Object Files
+# ==========================================
+*.o
+*.obj
+*.out
+*.exe
+*.app
+
+# Ignore local build artifacts and target binary directories
+bin/
+obj/
+
+# ==========================================
+# Operating System Specific Files
+# ==========================================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# ==========================================
+# IDEs and Text Editors
+# ==========================================
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# Visual Studio (Windows)
+.vs/
+Debug/
+Release/
+*.user
+*.suo
+*.db
+*.opendb
+
+# CLion / IntelliJ
+.idea/
+cmake-build-*/
+
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+
+# ==========================================
+# Crash Logs & Debugging Artifacts
+# ==========================================
+*.log
+*.stackdump
+*.dSYM/
