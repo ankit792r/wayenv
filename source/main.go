@@ -9,16 +9,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-func (m model) pageSize() int {
-	size := m.height - 2 // footer/help
-
-	if size < 1 {
-		size = 1
-	}
-
-	return size
-}
-
 type mode int
 
 const (
@@ -50,21 +40,6 @@ type model struct {
 	editIdx int
 }
 
-func getAllOsEnvs() []Env {
-
-	var envSlice []Env
-
-	for _, env := range os.Environ() {
-		pair := strings.SplitN(env, "=", 2)
-		env := Env{
-			Name:  pair[0],
-			Value: pair[1],
-		}
-		envSlice = append(envSlice, env)
-	}
-	return envSlice
-}
-
 func initialModel() model {
 	nameInput := textinput.New()
 	nameInput.Placeholder = "ENV_NAME"
@@ -86,21 +61,6 @@ func initialModel() model {
 
 func (m model) Init() tea.Cmd {
 	return textinput.Blink
-}
-
-func (m *model) updateScroll() {
-	pageSize := m.pageSize()
-	if m.selected < m.offset {
-		m.offset = m.selected
-	}
-
-	if m.selected >= m.offset+pageSize {
-		m.offset = m.selected - pageSize + 1
-	}
-
-	if m.selected >= m.offset+pageSize {
-		m.offset = m.selected - pageSize + 1
-	}
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -249,88 +209,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	return m, nil
-}
-
-func (m model) renderList() string {
-	var b strings.Builder
-	nameWidth := m.nameColumnWidth()
-	pageSize := m.pageSize()
-
-	if m.selected >= m.offset+pageSize {
-		m.offset = m.selected - pageSize + 1
-	}
-
-	end := min(m.offset+pageSize, len(m.envs))
-
-	for i := m.offset; i < end; i++ {
-		env := m.envs[i]
-
-		prefix := " "
-		if i == m.selected {
-			prefix = ">"
-		}
-
-		line := fmt.Sprintf(
-			"%s %-*s%s",
-			prefix,
-			nameWidth,
-			env.Name,
-			env.Value,
-		)
-		b.WriteString(line)
-		b.WriteByte('\n')
-	}
-
-	b.WriteString("\n")
-	b.WriteString("↑↓ navigate  a add  e edit  d delete  q quit")
-
-	return b.String()
-}
-
-func (m model) renderForm() string {
-	title := "Add Environment Variable"
-
-	if m.editing {
-		title = "Edit Environment Variable"
-	}
-
-	return fmt.Sprintf(
-		"%s\n\nName : %s\nValue: %s\n\n"+
-			"tab switch field\n"+
-			"enter save\n"+
-			"esc cancel",
-		title,
-		m.nameInput.View(),
-		m.valueInput.View(),
-	)
-}
-
-func (m model) renderDelete() string {
-	if len(m.envs) == 0 {
-		return ""
-	}
-
-	env := m.envs[m.selected]
-
-	return fmt.Sprintf(
-		"Delete %s?\n\n"+
-			"y confirm\n"+
-			"n cancel",
-		env.Name,
-	)
-}
-
-func (m model) nameColumnWidth() int {
-	maxLen := 0
-
-	for _, env := range m.envs {
-		if len(env.Name) > maxLen {
-			maxLen = len(env.Name)
-		}
-	}
-
-	// longest name + 2 tabs (assuming tab = 4 spaces)
-	return maxLen + 8
 }
 
 func (m model) View() string {

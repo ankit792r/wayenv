@@ -1,4 +1,4 @@
-module github.com/ankit792r/wayenv
+module wayenv
 
 go 1.26.4
 
